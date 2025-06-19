@@ -30,16 +30,16 @@ Backend API for "L'Outil de Maria" project, developed with **Python 3.13.1 + Fas
 
 ## Project Structure (Target Structure)
 
-app/ 
-  ├──main.py # FastAPI app init
-  ├──api/ # Routers (e.G., /requests, /users)
-  ├──models/ # SQLAlchemy models 
-  ├──schemas/ # Pydantic schemas
-  ├──services/ # Business logic 
-  ├──db/ # DB session, migrations
-  ├──core/ # Settings, auth 
-tests/ # Pytest unit / integration tests
-.env # Environment variables 
+<pre> ```text app/ 
+  ├── main.py # FastAPI app init 
+  ├── api/ # Routers (e.g., /requests, /users) 
+  ├── models/ # SQLAlchemy models 
+  │ └── schemas/ # Pydantic schemas 
+  ├── services/ # Business logic 
+  ├── db/ # DB session, migrations 
+  ├── core/ # Settings, auth 
+tests/ # Pytest unit / integration tests 
+.env # Environment variables ``` </pre>
 
 ---
 
