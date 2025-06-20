@@ -1,0 +1,63 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'outilmaria-back/**'
+  pull_request:
+    paths:
+      - 'outilmaria-back/**'
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: outilmaria-back
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install black isort flake8 pytest
+
+      - name: Lint & format check
+        run: |
+          black --check .
+          isort --check-only .
+          flake8 .
+
+      - name: Run tests
+        run: pytest
+        deploy:
+          needs: lint-test
+          runs-on: ubuntu-latest
+          if: github.ref == 'refs/heads/main'
+
+          steps:
+            - name: Copy files via SSH
+              uses: appleboy/scp-action@v0.1.4
+              with:
+                host: ${{ secrets.VPS_HOST }}
+                username: ${{ secrets.VPS_USER }}
+                key: ${{ secrets.PRIVATE_KEY }}
+                source: "./outilmaria-back/*"
+                target: "/home/deployuser/app"
+
+            - name: SSH Deploy
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ secrets.VPS_HOST }}
+                username: ${{ secrets.VPS_USER }}
+                key: ${{ secrets.PRIVATE_KEY }}
+                script: |
+                  cd /home/deployuser/app
+                  docker-compose down
+                  docker-compose up -d --build
