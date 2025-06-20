@@ -4,15 +4,15 @@ Backend API for "L'Outil de Maria" project, developed with **Python 3.13.1 + Fas
 
 ---
 
-## Project Features (Planned)
-- FastAPI application with modular routing
-- PostgreSQL database integration
-- JWT-based authentication & role-based access control
-- RESTful endpoints with validation using Pydantic
-- Dockerized environment (local development)
-- CI/CD pipeline via GitHub Actions
-- Automatic testing (unit + integration)
-- OpenAPI schema (Swagger docs)
+## Features 
+- RESTful API using FastAPI
+- PostgreSQL database  integration
+- JWT-based authentication system
+- Role-based permissions (Domain Manager, Assistant, PMO, Contract Manager)
+- Dockerized development
+- CI/CD with GitHub Actions
+- Swagger (OpenAPI) documentation
+- Unit & integration testing
 
 ---
 
@@ -52,6 +52,8 @@ tests/ # Pytest unit / integration tests
 docker-compose up --build
 ```
 Make sure you have Docker + Docker Compose installed
+
+FastAPI will be available at: http://localhost:8000/docs
 
 ### Manual Setup (Without Docker)
 
@@ -111,7 +113,22 @@ GitHub Actions (planned):
   feat(auth) : implement JWT token logic
   fix(request) : correct form validation issue
   ```
-  
+
+### License 
+MIT or Internal (to define). 
+
+---
+
+## ⚙️ Local Development
+
+### 🐳 With Docker
+
+```bash
+docker-compose up --build
+```
+
+App will run at: http://localhost:4200
+
 ### Manual Setup 
 1. Install dependencies
   ```bash
