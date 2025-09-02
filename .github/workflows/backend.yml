@@ -7,6 +7,7 @@ on:
   pull_request:
     paths:
       - 'outilmaria-back/**'
+  workflow_dispatch: {}
 
 jobs:
   lint-test:
@@ -14,50 +15,56 @@ jobs:
     defaults:
       run:
         working-directory: outilmaria-back
-
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: outilmaria-back/requirements.txt
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install black isort flake8 pytest
 
       - name: Lint & format check
         run: |
           black --check .
-          isort --check-only .
+          isort --check-only --profile black .
           flake8 .
 
       - name: Run tests
-        run: pytest
-        deploy:
-          needs: lint-test
-          runs-on: ubuntu-latest
-          if: github.ref == 'refs/heads/main'
+        run: pytest -q
 
-          steps:
-            - name: Copy files via SSH
-              uses: appleboy/scp-action@v0.1.4
-              with:
-                host: ${{ secrets.VPS_HOST }}
-                username: ${{ secrets.VPS_USER }}
-                key: ${{ secrets.PRIVATE_KEY }}
-                source: "./outilmaria-back/*"
-                target: "/home/deployuser/app"
+  deploy:
+    needs: lint-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy files via SSH
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "outilmaria-back/*"
+          target: "/home/deployuser/app"
 
       - name: SSH Deploy
         uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.VPS_HOST }}
-            username: ${{ secrets.VPS_USER }}
-            key: ${{ secrets.PRIVATE_KEY }}
-            script: |
-              cd /home/deployuser/app
-              docker-compose down
-              docker-compose up -d --build
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+            set -euo pipefail
+            cd /home/deployuser/app
+            docker compose down || docker-compose down
+            docker compose up -d --build || docker-compose up -d --build
