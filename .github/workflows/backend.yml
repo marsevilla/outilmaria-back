@@ -51,13 +51,13 @@ jobs:
                 source: "./outilmaria-back/*"
                 target: "/home/deployuser/app"
 
-            - name: SSH Deploy
-              uses: appleboy/ssh-action@master
-              with:
-                host: ${{ secrets.VPS_HOST }}
-                username: ${{ secrets.VPS_USER }}
-                key: ${{ secrets.PRIVATE_KEY }}
-                script: |
-                  cd /home/deployuser/app
-                  docker-compose down
-                  docker-compose up -d --build
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.VPS_HOST }}
+            username: ${{ secrets.VPS_USER }}
+            key: ${{ secrets.PRIVATE_KEY }}
+            script: |
+              cd /home/deployuser/app
+              docker-compose down
+              docker-compose up -d --build
