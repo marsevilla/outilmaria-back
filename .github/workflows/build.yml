@@ -19,7 +19,7 @@ jobs:
 
       - name: SonarQube Scan
         # ✅ use a valid tag from the SonarSource repo; 'v4' tracks the latest v4 release
-        uses: SonarSource/sonarcloud-github-action@v2
+        uses: SonarSource/sonarcloud-github-action@4ada052f2abf1ced01b816a376557fde207a33cb
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_PROJECT_KEY: my_org_my_project
