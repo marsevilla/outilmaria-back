@@ -14,6 +14,6 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@4ada052f2abf1ced01b816a376557fde207a33cb
+        uses: SonarSource/sonarqube-scan-action@08eba0b27e820071cde6df949e0beb9ba4906955
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
