@@ -8,7 +8,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@4ada052f2abf1ced01b816a376557fde207a33cb
         with:
           fetch-depth: 0
       - uses: sonarsource/sonarqube-scan-action@master
