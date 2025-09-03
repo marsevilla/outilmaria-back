@@ -1,19 +1,27 @@
 name: Build
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   sonarqube:
     name: SonarQube
-    runs-on: macos-latest
+    # ubuntu-latest is faster/cheaper; switch back to macOS only if you truly need it
+    runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # full history improves analysis relevance
+
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@08eba0b27e820071cde6df949e0beb9ba4906955
+        # ✅ use a valid tag from the SonarSource repo; 'v4' tracks the latest v4 release
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: my_org_my_project
+          SONAR_ORGANIZATION: my_org
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Auto-create PR comments
